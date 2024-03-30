@@ -1,0 +1,80 @@
+.profile {
+  width: 80%;
+  background-color: red;
+  margin-left: 50%;
+  transform: translate(-50%);
+}
+
+.prof-cont {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 0 black;
+}
+
+.prof-det {
+  width: 50%;
+  background-color: white;
+  padding: 20px;
+}
+
+.prof {
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.prof p {
+  color: rgb(96, 96, 96);
+  font-size: 18px;
+}
+
+.prof-button {
+  color: white;
+  background-color: rgb(43, 117, 255);
+  font-size: 16px;
+  padding: 5px;
+  width: 100px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 20px;
+}
+
+.prof-button:hover {
+  color: red;
+}
+
+.prof #email {
+  float: right;
+  margin-top: -60px;
+  margin-right: 60px;
+}
+
+.prof-grid-container {
+  width: 100%;
+  display: inline-flex;
+  background-color: white;
+  margin-top: 380px;
+  border-radius: 5px;
+  padding: 10px;
+  height: auto;
+  overflow: hidden;
+}
+
+.prof-grid {
+  column-gap: 10px;
+  display: flex;
+  padding: 8px;
+  flex-wrap: wrap;
+}
+
+.prof-grid img {
+  display: flex;
+  box-sizing: border-box;
+  width: 236px;
+  border-radius: 5px;
+  object-fit: cover;
+}

@@ -1,0 +1,27 @@
+.icon:first-child {
+    left: 60px;  
+}
+
+.icon:last-child {
+    right: 60px;
+}
+
+.tabs-box {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    overflow-x: hidden;
+}
+
+.tabs-box .tabs {
+    white-space: nowrap;
+    cursor: pointer;
+    color: white;
+    background-color: #343434;
+    padding: 5px 10px;   
+    font-size: 15px; 
+    border-radius: 7px;
+    border: none;
+    transition: .6s;
+}

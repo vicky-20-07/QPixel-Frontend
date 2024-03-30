@@ -1,25 +1,29 @@
-import logo from './logo.svg';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import GetStarted from "./Components/GetStarted";
+import Home from "./Components/Home";
+import Login from "./Login";
 import './App.css';
+import Register from "./Register";
+import Create from "./Components/Create";
+import NoPage from "./Components/NoPage";
+import Profile from "./Components/Profile";
+import Notification from "./Components/Notification";
+import HelpAndSupport from "./Components/HelpAndSupport";
 
-function App() {
+export default function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Routes>
+        <Route path="/" element={<GetStarted />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+        <Route path="/HelpAndSupport" element={<HelpAndSupport />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Create" element={<Create />} />
+        <Route path="/Profile" element={<Profile />} />
+        <Route path="/Notification" element={<Notification />} />
+        <Route path="*" element={<NoPage />} />
+      </Routes>
   );
 }
-
-export default App;
