@@ -42,7 +42,7 @@ export default function Login() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post("http://localhost:5000/loginUser", { email, password })
+        axios.post("https://qpixel.onrender.com/loginUser", { email, password })
             .then(result => {
                 console.log(result);
                 if (result.data.status === "success") {

@@ -17,7 +17,7 @@ export default function Register() {
     function handleSubmit(e) {
         e.preventDefault();
         if (password === confirmPassword && password !== "") {
-            axios.post("http://localhost:5000/createUser", { firstName, lastName, email, password })
+            axios.post("https://qpixel.onrender.com/createUser", { firstName, lastName, email, password })
             .then(res => {
                 console.log(res);
             })
