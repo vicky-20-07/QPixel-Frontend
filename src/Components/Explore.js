@@ -41,7 +41,7 @@ export const Categories = [{
     },
     {
         main: "Colors",
-        sub:"Tone,Bright,Bold",
+        sub:"Tone,Bright,Bold,Colorful",
     },
     {
         main: "Concepts",

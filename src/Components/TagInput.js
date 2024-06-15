@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import './TagInput.css';
 
-export default function TagInput() {
-    const [tags, setTags] = useState([]);
+export default function TagInput({tags, setTags}) {
 
     function handleKeyDown(e) {
         if(e.key !== 'Enter') return;

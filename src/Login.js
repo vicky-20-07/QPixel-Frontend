@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useGoogleLogin } from "@react-oauth/google";
+import logo from './Components/20231220_232247.png';
 
 
 export default function Login() {
@@ -42,7 +44,7 @@ export default function Login() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post("https://qpixel.onrender.com/loginUser", { email, password })
+        axios.post("http://localhost:5000/loginUser", { email, password })
             .then(result => {
                 console.log(result);
                 if (result.data.status === "success") {
@@ -51,24 +53,74 @@ export default function Login() {
                     navigate('/Home');
                 }
                 else if (result.data === "Sorry Password Incorrect") {
-                    toast.error("Incorrect password. Please try again."); // Notify user with error message
+                    toast.error("Incorrect password. Please try again.");
                 }
                 else {
                     console.log(result.data);
-                    toast.error("Incorrect email or user does not exist. Please sign up."); // Notify user with error message
+                    toast.error("Incorrect email or user does not exist. Please sign up.");
                 }
             })
             .catch(err => {
                 console.log(err);
-                toast.error("Login failed. Please try again."); // Notify user with error message
+                toast.error("Login failed. Please try again.");
             })
             .catch(err => console.log(err));
     }
+
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                const { access_token } = tokenResponse;
+                const userInfoResponse = await fetch(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${access_token}`,
+                        },
+                    }
+                );
+
+                if (userInfoResponse.ok) {
+                    const userInfo = await userInfoResponse.json();
+                    const emailExistsResponse = await fetch(
+                        'http://localhost:5000/checkEmail',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email: userInfo.email }),
+                        }
+                    );
+
+                    if (emailExistsResponse.ok) {
+                        const { exists } = await emailExistsResponse.json();
+                        if (exists) {
+                            window.localStorage.setItem("token", "success");
+                            window.localStorage.setItem("isloggedin", true);
+                            navigate('/Home');
+                        }
+                        else {
+                            alert("Register with email to access the login using Google id !!!");
+                        }
+                        console.log('Email exists in backend:', exists);
+                    } else {
+                        console.error('Error checking email existence:', emailExistsResponse.statusText);
+                    }
+                } else {
+                    console.error('Error fetching user info:', userInfoResponse.statusText);
+                }
+            } catch (error) {
+                console.error('Error processing user info:', error);
+            }
+        },
+    });
 
     return (
         <Wrapper style={{ backgroundImage: `${linearGradient}, ${background}` }}>
             <ToastContainer />
             <Container>
+            <img src={logo} className="logo" alt="logo" onClick={() => navigate('/')}/>
                 <div><h2>Sign in</h2>
                     New user? <span onClick={() => navigate('/Register')}>Create an account</span></div>
                 <form action="post" onSubmit={handleSubmit}>
@@ -80,7 +132,7 @@ export default function Login() {
                     <p id="forgot-password">Forgot password?</p>
                 </form>
                 <h1>Or</h1>
-                <button className="additional">
+                <button className="additional" onClick={() => login()}>
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="26" height="26" viewBox="0 0 48 48" className='add-icon'>
                         <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
                         <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
@@ -126,9 +178,17 @@ const Container = styled.div`
     padding: 24px 56px 40px;
     border-radius: 4px;
 
+    .logo {
+        height: 100px;
+        width: 100px;
+        margin: 0;
+        cursor: pointer;
+    }
+
     h2 {
         font-size: 36px;
         font-weight: 700;
+        margin-top: 0;
     }
 
     div {

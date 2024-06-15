@@ -10,6 +10,7 @@ import NoPage from "./Components/NoPage";
 import Profile from "./Components/Profile";
 import Notification from "./Components/Notification";
 import HelpAndSupport from "./Components/HelpAndSupport";
+import EditProfile from "./Components/EditProfile";
 
 export default function App() {
 
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/Create" element={<Create />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="/EditProfile" element={<EditProfile />} />
         <Route path="/Notification" element={<Notification />} />
         <Route path="*" element={<NoPage />} />
       </Routes>

@@ -13,7 +13,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import logo from './20231220_232409.png';
-import {toast, ToastContainer} from 'react-toastify';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Header(props) {
@@ -69,7 +69,6 @@ export default function Header(props) {
 
     return (
         <Wrapper>
-            <ToastContainer />
             <WrapperBackground />
             <LogoWrapper>
                 <IconButton>

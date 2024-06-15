@@ -38,7 +38,7 @@ export default function GetStarted() {
                         <img src={library} alt="library" />
                         <div className="text">
                             <h1>Create your own library</h1>
-                            <p>Store your masterpieces in your own library under your profile.</p>
+                            <p>QPixel offers the users to create their own library to store their images. The images would be hoisted in the main page based on the user interaction.</p>
                         </div>
                     </div>
                     <div className="feature">
@@ -52,7 +52,7 @@ export default function GetStarted() {
                         <img src={saving} alt="download" style={{ height: '300px', fill: "white" }} />
                         <div className="text" style={{ paddingBottom: '20px' }}>
                             <h1>Save your favourites offline</h1>
-                            <p>Download your favourite albums from the other creators in your device.</p>
+                            <p>Download your favourite albums from the other creators in your local device.</p>
                         </div>
                     </div>
                     <div className="feature">

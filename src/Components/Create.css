@@ -10,13 +10,14 @@
 
 .card .uploadSection {
     display: flex;
+    flex-direction: column;
     gap: 30px;
 }
 
 .card .drag-area {
-    height: 400px;
-    width: 300px;
-    border-radius: 10px;
+    height: 550px;
+    width: 450px;
+    border-radius: 5px;
     color: #898989;
     background: #323232;
     font-weight: 600;
@@ -27,6 +28,12 @@
     -webkit-user-select: none;
     margin-top: 10px;
     border: 1px solid #5e5e5e45;
+}
+
+.titles {
+    border: 2px dotted #56565647;
+    padding: 19vh 25vh;
+    border-radius: 10px;
 }
 
 .card .drag-area:hover {
@@ -41,7 +48,7 @@
     color: rgb(255, 255, 255);
     margin-left: 5px;
     cursor: pointer;
-    transition: 0.5s; 
+    transition: 0.5s;
 }
 
 
@@ -50,65 +57,50 @@
 }
 
 .card .container {
-    width: 200px;
     height: auto;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    -ms-overflow-style: none;
-    flex-wrap: wrap;
-    max-height: 400px;
-    overflow-y: auto;
-    margin-top: 10px;
-    margin-left: 10px;
-    background-color: #323232;
-    border-radius: 10px;
-    border: 1px solid #5e5e5e45;
-}
-
-.card .container:hover {
-    box-shadow: 0 0 6px .1px #656565;
 }
 
 .card .container .image {
-    width: auto;
-    height: auto;
-    margin: 10px;
-    height: 75px;
-    position: relative;
-    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-.card .container .image img {
-    width: 100%;
+.card .container .image img:hover {
+    box-shadow: 0 0 10px 5px #656565;
+}
+
+.card .container img {
     height: 100%;
-    border-radius: 2px;
+    max-height: 600px;
+    min-height: 300px;
 }
 
-.card .container .image span {
-    position: absolute;
-    top: -2px;
-    right: 9px;
-    font-size: 20px;
+.card .container .image button{
+    outline: 0;
+    border: 0;
+    color: white;
+    border-radius: 4px;
+    margin-top: 30px;
     cursor: pointer;
+    font-size: 18px;
+    padding: 12px 0;
+    width: 400px;
+    font-weight: 700;
+    background-color: #323232;
+    transition: .5s;
+}
+
+.card .container .image button:hover {
+    background-color: red;
+    color: black;
 }
 
 .card input,
 .card .drag-area .on-drop,
 .card .drag-area.dragover .visible {
     display: none;
-}
-
-.delete {
-    z-index: 999;
-    color: black;
-    background-color: #99989846;
-    border-radius: 50%;
-    height: 20px;
-    width: 20px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
 }
 
 .input-form {
@@ -208,16 +200,16 @@
     letter-spacing: 1px;
 }
 
-.input-container input:checked + .private {
+.input-container input:checked+.private {
     background-color: white;
 }
 
-.input-container input:hover + .private {
+.input-container input:hover+.private {
     box-shadow: 0 0 6px #555;
 }
 
-.input-container input:checked + .private .private-icon,
-.input-container input:checked + .private label {
+.input-container input:checked+.private .private-icon,
+.input-container input:checked+.private label {
     color: black;
 }
 
@@ -272,7 +264,6 @@
     border-radius: 4px;
     margin-top: 30px;
     cursor: pointer;
-    font-weight: 400;
     padding: 12px 13px;
     font-weight: 700;
     width: 100px;
@@ -282,4 +273,3 @@
 .upload-button:hover {
     background: #202020;
 }
-

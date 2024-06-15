@@ -1,3 +1,243 @@
+// import React, { useState, useRef } from "react";
+// import styled from "styled-components";
+// import TagInput from "./TagInput";
+// import Header from "./Header";
+// import PublicOffIcon from '@mui/icons-material/PublicOff';
+// import PublicIcon from '@mui/icons-material/Public';
+// import ScheduleIcon from '@mui/icons-material/Schedule';
+// import './Create.css';
+// import { useNavigate } from "react-router-dom";
+// import RestrictedAccess from "./RestrictedAccess";
+// import axios from 'axios';
+
+// export default function Create() {
+//     const today = new Date();
+//     const date = new Intl.DateTimeFormat({
+//         dateStyle: "short",
+//     });
+//     const time = new Intl.DateTimeFormat("es-sp", {
+//         timeStyle: "short",
+//     });
+
+//     const [dateInput, setDateInput] = useState('text');
+//     const [timeInput, setTimeInput] = useState('text');
+//     const [display, setDisplay] = useState('none');
+//     const navigate = useNavigate();
+//     const [images, setImages] = useState([]);
+//     const [isDragging, setIsDragging] = useState(false);
+//     const fileInputRef = useRef(null);
+//     const [privacy, setPrivacy] = useState('private'); // Default privacy
+
+//     function selectFiles() {
+//         fileInputRef.current.click();
+//     }
+
+//     const [file, setFile] = useState(null);
+//     const [formData, setFormData] = useState({
+//         title: '',
+//         description: '',
+//         category: '',
+//         tags: '',
+//         link: '',
+//         device: ''
+//     });
+
+//     function uploadImages(e) {
+//         e.preventDefault();
+//         const form = new FormData();
+//         form.append('file', file);
+//         form.append('title', formData.title);
+//         form.append('description', formData.description);
+//         form.append('category', formData.category);
+//         form.append('tags', formData.tags);
+//         form.append('link', formData.link);
+//         form.append('device', formData.device);
+//         form.append('privacy', privacy);
+
+//         axios.post('http://localhost:5000/imageUpload', form)
+//             .then(res => console.log(res))
+//             .catch(err => console.log(err));
+//     }
+
+//     function onFileSelect(event) {
+//         const files = event.target.files;
+//         if (files.length === 0) return;
+
+//         const file = files[0];
+//         if (file.type.split('/')[0] !== 'image') return;
+
+//         setFile(file);
+//         setImages([{
+//             name: file.name,
+//             url: URL.createObjectURL(file),
+//         }]);
+//     }
+
+//     function deleteImage() {
+//         setFile(null);
+//         setImages([]);
+//     }
+
+//     function onDragOver(event) {
+//         event.preventDefault();
+//         setIsDragging(true);
+//         event.dataTransfer.dropEffect = "copy";
+//     }
+
+//     function onDragLeave(event) {
+//         event.preventDefault();
+//         setIsDragging(false);
+//     }
+
+//     function onDrop(event) {
+//         event.preventDefault();
+//         setIsDragging(false);
+
+//         const files = event.dataTransfer.files;
+//         if (files.length === 0) return;
+
+//         const file = files[0];
+//         if (file.type.split('/')[0] !== 'image') return;
+
+//         setFile(file);
+//         setImages([{
+//             name: file.name,
+//             url: URL.createObjectURL(file),
+//         }]);
+//     }
+
+//     function handleInputChange(e) {
+//         const { name, value } = e.target;
+//         setFormData(prevState => ({
+//             ...prevState,
+//             [name]: value
+//         }));
+//     }
+
+//     const displaySet = window.localStorage.getItem('isloggedin');
+
+//     return (
+//         displaySet ? (
+//             <Cover>
+//                 <Header />
+//                 <Wrapper>
+//                     <Container className="card">
+//                         <div className="uploadSection">
+//                             {!images.length && (
+//                                 <div className="drag-area" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
+//                                     {isDragging ? (
+//                                         <span className="select">Drop image here</span>
+//                                     ) : (
+//                                         <>
+//                                             Drag & drop image here or {" "}
+//                                             <span className="select" role="button" onClick={selectFiles} >
+//                                                 Browse
+//                                             </span>
+//                                         </>
+//                                     )}
+//                                     <input type="file" className="file" ref={fileInputRef} onChange={onFileSelect} ></input>
+//                                 </div>
+//                             )}
+//                             <div className="container">
+//                                 {images.map((image, index) => (
+//                                     <div className="image" key={index}>
+//                                         <img src={image.url} alt={image.name} />
+//                                         <button className="delete" onClick={deleteImage}>Remove image</button>
+//                                     </div>
+//                                 ))}
+//                             </div>
+//                         </div>
+//                     </Container>
+//                     <form className="input-form" onSubmit={uploadImages}>
+//                         <div className="privacy-container">
+//                             <div className="radio-tile-group" onClick={() => setDisplay('none')}>
+//                                 <div className="input-container">
+//                                     <input type="radio" name="privacy" value="private" checked={privacy === 'private'} onChange={() => setPrivacy('private')} />
+//                                     <div className="private">
+//                                         <PublicOffIcon className="private-icon" />
+//                                         <label>Private</label>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                             <div className="radio-tile-group" onClick={() => setDisplay('none')}>
+//                                 <div className="input-container">
+//                                     <input type="radio" name="privacy" value="public" checked={privacy === 'public'} onChange={() => setPrivacy('public')} />
+//                                     <div className="private">
+//                                         <PublicIcon className="private-icon" />
+//                                         <label>Public</label>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                             <div className="radio-tile-group" onClick={() => setDisplay('block')}>
+//                                 <div className="input-container">
+//                                     <input type="radio" name="privacy" value="schedule" checked={privacy === 'schedule'} onChange={() => setPrivacy('schedule')} />
+//                                     <div className="private">
+//                                         <ScheduleIcon className="private-icon" />
+//                                         <label>Schedule</label>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                         <div className="schedule" style={{ display: display }}>
+//                             <p>Schedule the date and time for the images to be uploaded</p>
+//                             <div className="schedule-time">
+//                                 <input type={dateInput} className="date" onFocus={() => setDateInput('date')} onBlur={() => setDateInput('text')} placeholder={date.format(today)} />
+//                                 <input type={timeInput} className="time" onFocus={() => setTimeInput('time')} onBlur={() => setTimeInput('text')} placeholder={time.format(today)} />
+//                             </div>
+//                         </div>
+//                         {/* Rest of the form for image details */}
+//                         <div className="form-div" id="title">
+//                             <label htmlFor="title">Title</label>
+//                             <input type="text" name="title" placeholder="Add a title *" required onChange={handleInputChange} value={formData.title} />
+//                         </div>
+//                         <div className="form-div" id="description">
+//                             <label htmlFor="description">Description</label>
+//                             <textarea className="description" placeholder="Add a detailed description" name="description" onChange={handleInputChange} value={formData.description} />
+//                         </div>
+//                         <div className="form-div" id="category">
+//                             <label htmlFor="category">Category</label>
+//                             <input type="text" name="category" placeholder="Add a category *" required onChange={handleInputChange} value={formData.category} />
+//                         </div>
+//                         <div className="form-div" id="tags">
+//                             <label htmlFor="tags">Tag</label>
+//                             <TagInput className="tags" name="tags" required onChange={handleInputChange} value={formData.tags} />
+//                         </div>
+//                         <div className="form-div" id="link">
+//                             <label htmlFor="link">Link</label>
+//                             <input type="url" placeholder="Add a link" name="link" onChange={handleInputChange} value={formData.link} />
+//                         </div>
+//                         <div className="form-div" id="device">
+//                             <label htmlFor="device">Device</label>
+//                             <input type="text" name="device" placeholder="Device name" required onChange={handleInputChange} value={formData.device} />
+//                         </div>
+//                         <div style={{ display: "flex", gap: "20px" }}>
+//                             <button type="reset" className="upload-button" onClick={() => navigate('/Home')}>Cancel</button>
+//                             <button type="submit" className="upload-button">Upload</button>
+//                         </div>
+//                     </form>
+//                 </Wrapper>
+//             </Cover>
+//         ) : (
+//             <RestrictedAccess />
+//         )
+//     );
+// }
+
+// const Cover = styled.div`
+// `;
+
+// const Wrapper = styled.div`
+//     background-color: #100C08;
+//     position: absolute;
+//     width: 100%;
+//     top: 25;
+//     left: 0;
+// `;
+
+// const Container = styled.div`
+// `;
+
+
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import TagInput from "./TagInput";
@@ -8,56 +248,74 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import './Create.css';
 import { useNavigate } from "react-router-dom";
 import RestrictedAccess from "./RestrictedAccess";
+import axios from 'axios';
 
 export default function Create() {
-
     const today = new Date();
-
     const date = new Intl.DateTimeFormat({
         dateStyle: "short",
-    })
-
+    });
     const time = new Intl.DateTimeFormat("es-sp", {
         timeStyle: "short",
-    })
+    });
 
     const [dateInput, setDateInput] = useState('text');
     const [timeInput, setTimeInput] = useState('text');
-
     const [display, setDisplay] = useState('none');
-
     const navigate = useNavigate();
-
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef(null);
+    const [privacy, setPrivacy] = useState('private'); // Default privacy
+    const [tags, setTags] = useState([]); // Manage tags
 
     function selectFiles() {
         fileInputRef.current.click();
     }
 
-    function onFileSelect(event) {
-        const files = event.target.files;
+    const [file, setFile] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: '',
+        link: '',
+        device: ''
+    });
 
-        if (files.length === 0) return;
+    function uploadImages(e) {
+        e.preventDefault();
+        const form = new FormData();
+        form.append('file', file);
+        form.append('title', formData.title);
+        form.append('description', formData.description);
+        form.append('category', formData.category);
+        form.append('tags', tags.join(',')); // Convert tags array to a comma-separated string
+        form.append('link', formData.link);
+        form.append('device', formData.device);
+        form.append('privacy', privacy);
 
-        for (let i = 0; i < files.length; i++) {
-            if (files[i].type.split('/')[0] !== 'image') continue;
-
-            if (!images.some((e) => e.name === files[i].name)) {
-                setImages((prevImages) => [
-                    ...prevImages,
-                    {
-                        name: files[i].name,
-                        url: URL.createObjectURL(files[i]),
-                    },
-                ]);
-            }
-        }
+        axios.post('http://localhost:5000/imageUpload', form)
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
     }
 
-    function deleteImage(index) {
-        setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    function onFileSelect(event) {
+        const files = event.target.files;
+        if (files.length === 0) return;
+
+        const file = files[0];
+        if (file.type.split('/')[0] !== 'image') return;
+
+        setFile(file);
+        setImages([{
+            name: file.name,
+            url: URL.createObjectURL(file),
+        }]);
+    }
+
+    function deleteImage() {
+        setFile(null);
+        setImages([]);
     }
 
     function onDragOver(event) {
@@ -76,27 +334,24 @@ export default function Create() {
         setIsDragging(false);
 
         const files = event.dataTransfer.files;
+        if (files.length === 0) return;
 
-        for (let i = 0; i < files.length; i++) {
-            if (files[i].type.split('/')[0] !== 'image') {
-                continue;
-            }
+        const file = files[0];
+        if (file.type.split('/')[0] !== 'image') return;
 
-            if (!images.some((e) => e.name === files[i].name)) {
-                setImages((prevImages) => [
-                    ...prevImages,
-                    {
-                        name: files[i].name,
-                        url: URL.createObjectURL(files[i]),
-                    },
-                ]);
-            }
-        }
-
+        setFile(file);
+        setImages([{
+            name: file.name,
+            url: URL.createObjectURL(file),
+        }]);
     }
 
-    function uploadImages() {
-        console.log("images: ", images);
+    function handleInputChange(e) {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
     const displaySet = window.localStorage.getItem('isloggedin');
@@ -108,37 +363,36 @@ export default function Create() {
                 <Wrapper>
                     <Container className="card">
                         <div className="uploadSection">
-                            <div className="drag-area" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
-
-                                {isDragging ? (
-                                    <span className="select">Drop images here</span>
-                                ) : (
-                                    <>
-                                        Drag & drop images here or {" "}
-                                        <span className="select" role="button" onClick={selectFiles} >
-                                            Browse
-                                        </span>
-                                    </>
-                                )}
-
-                                <input type="file" className="file" multiple ref={fileInputRef} onChange={onFileSelect} ></input>
-                            </div>
+                            {!images.length && (
+                                <div className="drag-area" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
+                                    {isDragging ? (
+                                        <span className="select">Drop image here</span>
+                                    ) : (
+                                        <>
+                                            Drag & drop image here or {" "}
+                                            <span className="select" role="button" onClick={selectFiles} >
+                                                Browse
+                                            </span>
+                                        </>
+                                    )}
+                                    <input type="file" className="file" ref={fileInputRef} onChange={onFileSelect} ></input>
+                                </div>
+                            )}
                             <div className="container">
-
-                                {images.map((images, index) => (
+                                {images.map((image, index) => (
                                     <div className="image" key={index}>
-                                        <span className="delete" onClick={() => deleteImage(index)}>&times;</span>
-                                        <img src={images.url} alt={images.name} />
+                                        <img src={image.url} alt={image.name} />
+                                        <button className="delete" onClick={deleteImage}>Remove image</button>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </Container>
-                    <form className="input-form" action="#" method="put" >
+                    <form className="input-form" onSubmit={uploadImages}>
                         <div className="privacy-container">
                             <div className="radio-tile-group" onClick={() => setDisplay('none')}>
                                 <div className="input-container">
-                                    <input type="radio" name="privacy" />
+                                    <input type="radio" name="privacy" value="private" checked={privacy === 'private'} onChange={() => setPrivacy('private')} />
                                     <div className="private">
                                         <PublicOffIcon className="private-icon" />
                                         <label>Private</label>
@@ -147,16 +401,16 @@ export default function Create() {
                             </div>
                             <div className="radio-tile-group" onClick={() => setDisplay('none')}>
                                 <div className="input-container">
-                                    <input type="radio" name="privacy" />
+                                    <input type="radio" name="privacy" value="public" checked={privacy === 'public'} onChange={() => setPrivacy('public')} />
                                     <div className="private">
                                         <PublicIcon className="private-icon" />
-                                        <label for>Public</label>
+                                        <label>Public</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="radio-tile-group" onClick={() => setDisplay('block')}>
                                 <div className="input-container">
-                                    <input type="radio" name="privacy" />
+                                    <input type="radio" name="privacy" value="schedule" checked={privacy === 'schedule'} onChange={() => setPrivacy('schedule')} />
                                     <div className="private">
                                         <ScheduleIcon className="private-icon" />
                                         <label>Schedule</label>
@@ -171,33 +425,34 @@ export default function Create() {
                                 <input type={timeInput} className="time" onFocus={() => setTimeInput('time')} onBlur={() => setTimeInput('text')} placeholder={time.format(today)} />
                             </div>
                         </div>
+                        {/* Rest of the form for image details */}
                         <div className="form-div" id="title">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" placeholder="Add a title *" required />
+                            <label htmlFor="title">Title</label>
+                            <input type="text" name="title" placeholder="Add a title *" required onChange={handleInputChange} value={formData.title} />
                         </div>
                         <div className="form-div" id="description">
-                            <label for="description">Description</label>
-                            <textarea className="description" placeholder="Add a detailed description" />
+                            <label htmlFor="description">Description</label>
+                            <textarea className="description" placeholder="Add a detailed description" name="description" onChange={handleInputChange} value={formData.description} />
                         </div>
-                        <div className="form-div" id="title">
-                            <label for="category">Category</label>
-                            <input type="text" name="category" placeholder="Add a category *" required />
+                        <div className="form-div" id="category">
+                            <label htmlFor="category">Category</label>
+                            <input type="text" name="category" placeholder="Add a category *" required onChange={handleInputChange} value={formData.category} />
                         </div>
                         <div className="form-div" id="tags">
-                            <label for="tags">Tag</label>
-                            <TagInput className="tags" name="tags" required />
+                            <label htmlFor="tags">Tag</label>
+                            <TagInput tags={tags} setTags={setTags} />
                         </div>
                         <div className="form-div" id="link">
-                            <label for="link">Link</label>
-                            <input type="url" placeholder="Add a link" />
+                            <label htmlFor="link">Link</label>
+                            <input type="url" placeholder="Add a link" name="link" onChange={handleInputChange} value={formData.link} />
                         </div>
-                        <div className="form-div" id="title">
-                            <label for="device">Device</label>
-                            <input type="text" name="device" placeholder="Device name" required />
+                        <div className="form-div" id="device">
+                            <label htmlFor="device">Device</label>
+                            <input type="text" name="device" placeholder="Device name" required onChange={handleInputChange} value={formData.device} />
                         </div>
                         <div style={{ display: "flex", gap: "20px" }}>
                             <button type="reset" className="upload-button" onClick={() => navigate('/Home')}>Cancel</button>
-                            <button type="submit" className="upload-button" onClick={uploadImages}>Upload</button>
+                            <button type="submit" className="upload-button">Upload</button>
                         </div>
                     </form>
                 </Wrapper>
@@ -205,12 +460,11 @@ export default function Create() {
         ) : (
             <RestrictedAccess />
         )
-
     );
 }
 
 const Cover = styled.div`
-`
+`;
 
 const Wrapper = styled.div`
     background-color: #100C08;
@@ -218,7 +472,7 @@ const Wrapper = styled.div`
     width: 100%;
     top: 25;
     left: 0;
-`
+`;
 
 const Container = styled.div`
-`
+`;
